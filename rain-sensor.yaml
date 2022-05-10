@@ -1,0 +1,65 @@
+esphome:
+  name: rain-sensor
+  on_boot:
+    priority: -10
+    then:
+      - script.execute: heartbeat
+  includes:
+    - RG9.h
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+  level: DEBUG
+  hardware_uart: UART1
+
+# Enable Home Assistant API
+api:
+
+output:
+  - id: onBoardLED
+    platform: gpio
+    pin: 2
+
+uart:
+  id: uart_bus
+  tx_pin: GPIO1
+  rx_pin: GPIO3
+  baud_rate: 9600
+
+text_sensor:
+  - platform: custom
+    lambda: |-
+      auto rg9Sensor = new RG9Component(id(uart_bus));
+      App.register_component(rg9Sensor);
+      return {rg9Sensor};
+    text_sensors:
+      name: "Rainfall"
+ 
+script:
+  - id: oneBeat
+    then:
+      - output.turn_on: onBoardLED
+      - delay: 250ms
+      - output.turn_off: onBoardLED
+    
+  - id: heartbeat
+    then:
+    - script.execute: oneBeat
+    - delay: 750ms 
+    - script.execute: oneBeat
+    - delay: 750ms 
+    - script.execute: oneBeat
+    - delay: 750ms 
+    - script.execute: oneBeat
+    - delay: 750ms
+    - while:
+        condition:
+          lambda: 'return true;'
+        then:
+        - script.execute: oneBeat
+        - delay: 10s
