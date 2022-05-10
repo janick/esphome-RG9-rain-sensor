@@ -1,5 +1,4 @@
-# esphome-RG9-rain-sensor
-Custom ESPhome Component for a RG-9 Rain Sensor
+# Custom ESPhome Component for a RG-9 Rain Sensor
 
 The [RG-9 rain sensor by Hydreon](https://rainsensors.com/products/rg-9/) is a laser-based sensor that detects the presence of water droplets on the surface of the transparent plastic dome. Unlike the cheaper and simpler resistive based water sensor, the sensor itself is not physically exposed to the elements, and it does not depend on the water evaporating to report that the rain as stopped.
 
