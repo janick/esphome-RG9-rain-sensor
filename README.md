@@ -15,7 +15,7 @@ Using two wire pairs from a length of CAT5 cable, I connected the sensor to my [
 
 then created a UART-based custom components.
 
-The RG-9 Custom Component resets the sensor every 18 hours approximately and puts it in polling mode. The sensor is polled every seconds, reporting any change in reported rain level as an integer 0 through 9. If the sensor cannot be succesfully read for an hour, -1 is reported.
+The RG-9 Custom Component resets the sensor every 18 hours approximately and puts it in polling mode. The sensor is polled every seconds, reporting any change in reported rain level as an integer 0 through 9 (contrary to [documentation](./UserGuide.pdf)!). If the sensor cannot be succesfully read for an hour, -1 is reported.
 
 # WTF???
 
