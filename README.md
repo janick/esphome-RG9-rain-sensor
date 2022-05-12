@@ -22,6 +22,7 @@ The RG-9 Custom Component resets the sensor every 18 hours approximately and put
 I'm getting *really* frustrated by this sensor. The results I'm getting make absolutely no sense. I got a spike up to R6 at 12:30 on May 11 and keep getting ever more frequent R1 readings. I thought a bird had landed on the lense and that low-level readings were just uncertainty in the sensor. But it finally started raining at around 8am on May 12 and lo-and-behold! The sensor continues to report "R1"!
 
 ![Home Assistant Sensor Data](./images/ScreenShot2022-05-12T09.08.02.png)
+![Home Assistant Sensor Data](./images/ScreenShot2022-05-12T09.48.38.png)
 | May 11, 13:04: Sunny | May 12, 09:03: Rainy |
 |----------------------| ---------------------|
 |<img src="./images/2022-05-11T13.04.30.jpg" width=400>|<img src="./images/2022-05-12T09.03.00.jpg" width=400>|
