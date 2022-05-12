@@ -1,11 +1,11 @@
 #include "esphome.h"
 
-class RG9Component : public PollingComponent, public UARTDevice, public text_sensor::TextSensor, public CustomAPIDevice {
+class RG9Component : public PollingComponent, public UARTDevice, public Sensor, public CustomAPIDevice {
  public:
   RG9Component(UARTComponent *parent) : PollingComponent(1000), UARTDevice(parent) {}
 
   uint8_t     line[64];
-  const char* lastPoll;
+  int         lastPoll;
   uint16_t    pollCount;
   uint16_t    failCount;
     
@@ -30,11 +30,9 @@ class RG9Component : public PollingComponent, public UARTDevice, public text_sen
       return true;
     }
     
-  const char* stateName[4] = {"None", "Light", "Medium", "Heavy"};
-  
-  const char* parseLine()
+  int parseLine()
     {
-      const char* rc = NULL;
+      int rc = -1;
       uint8_t *p = line;
       while (1) {
         while (*p++ != 'R') {
@@ -43,9 +41,9 @@ class RG9Component : public PollingComponent, public UARTDevice, public text_sen
         while (isspace(*p)) p++;
      
         int val = *p - '0';
-        if (0 <= val && val <= 3) rc = stateName[val];
+        if (0 <= val && val <= 9) rc = val;
       }
-      return NULL;
+      return rc;
     }
    
   float get_setup_priority() const override
@@ -55,7 +53,7 @@ class RG9Component : public PollingComponent, public UARTDevice, public text_sen
  
   void setup() override
     {
-      lastPoll  = NULL;
+      lastPoll  = -1;
       pollCount = 0;
       failCount = 0;
       register_service(&RG9Component::on_reset, "reset");
@@ -82,10 +80,10 @@ class RG9Component : public PollingComponent, public UARTDevice, public text_sen
       write_str("R\n");
       flush();
 
-      // Response: "R [0123]\n"
+      // Response: "R [0-9]\n"
       if (readLine()) {
-        const char *state = parseLine();
-        if (state) {
+        int state = parseLine();
+        if (state >= 0) {
           polledState(state);
           return;
         }
@@ -93,16 +91,16 @@ class RG9Component : public PollingComponent, public UARTDevice, public text_sen
     
       // If we can't read the sensor for an hour, something is wrong
       if (failCount++ > 3600) {
-        lastPoll = NULL;
-        polledState("Sensor Error");
+        lastPoll = -1;
+        polledState(-1);
       }
     }
     
-  void polledState(const char* state)
+  void polledState(int state)
     {
       failCount = 0;
       if (lastPoll == state) return;
-      publish_state(std::string(state));
+      publish_state(state);
       lastPoll = state;
     }
 };

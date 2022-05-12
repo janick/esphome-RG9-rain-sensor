@@ -37,8 +37,10 @@ text_sensor:
       auto rg9Sensor = new RG9Component(id(uart_bus));
       App.register_component(rg9Sensor);
       return {rg9Sensor};
-    text_sensors:
-      name: "Rainfall"
+    sensors:
+      name: "Rain Intensity"
+      accuracy_decimals: 0
+      unit_of_measurement: '-'
  
 script:
   - id: oneBeat
