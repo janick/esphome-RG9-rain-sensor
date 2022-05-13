@@ -29,6 +29,8 @@ I'm getting *really* frustrated by this sensor. The results I'm getting make abs
 
 I'm reporting the issue to Hydreon. Meanwhile, I DO NOT RECOMMEND!
 
+[Follow the discussion on HomeAssistant's community board here](https://community.home-assistant.io/t/hydreon-rg-15-rain-sensor/332794/9)
+
 # Debug
 
 Everything read from the sensor's serial output is echoed to the debug log. A "on_reset" call service is provided to be able to manually reset the sensor via the "Developer's Tools" Service calling page, which will echo the reported device configuration in the logs.
