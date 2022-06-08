@@ -17,17 +17,9 @@ then created a UART-based custom components.
 
 The RG-9 Custom Component resets the sensor every 18 hours approximately and puts it in polling mode. The sensor is polled every seconds, reporting any change in reported rain level as an integer 0 through 9 (contrary to [documentation](./UserGuide.pdf)!). If the sensor cannot be succesfully read for an hour, -1 is reported.
 
-# WTF???
+# IMPORTANT
 
-I'm getting *really* frustrated by this sensor. The results I'm getting make absolutely no sense. I got a spike up to R6 at 12:30 on May 11 and keep getting ever more frequent R1 readings. I thought a bird had landed on the lense and that low-level readings were just uncertainty in the sensor. But it finally started raining at around 8am on May 12 and lo-and-behold! The sensor continues to report "R1"!
-
-![Home Assistant Sensor Data](./images/ScreenShot2022-05-12T09.08.02.png)
-![Home Assistant Sensor Data](./images/ScreenShot2022-05-12T09.48.38.png)
-| May 11, 13:04: Sunny | May 12, 09:03: Rainy |
-|----------------------| ---------------------|
-|<img src="./images/2022-05-11T13.04.30.jpg" width=400>|<img src="./images/2022-05-12T09.03.00.jpg" width=400>|
-
-I'm reporting the issue to Hydreon. Meanwhile, I DO NOT RECOMMEND!
+Set the sensitivity to '2' (1000 on the dip switches). Lower sensitivities will result in a lot of false positives.
 
 [Follow the discussion on HomeAssistant's community board here](https://community.home-assistant.io/t/hydreon-rg-15-rain-sensor/332794/9)
 
@@ -56,7 +48,7 @@ Everything read from the sensor's serial output is echoed to the debug log. A "o
 SW 1.000 2020.06.05
 Emitters 100
 [07:10:17][D][RG9:028]: 42:  100, EmTotal 200
-DIP 0000
+DIP 1000
 PwrDays 0
 
 
