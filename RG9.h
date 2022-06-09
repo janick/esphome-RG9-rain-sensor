@@ -1,14 +1,26 @@
 #include "esphome.h"
 
-class RG9Component : public PollingComponent, public UARTDevice, public Sensor, public CustomAPIDevice {
+class RG9Component : public PollingComponent, public UARTDevice, public CustomAPIDevice {
  public:
-  RG9Component(UARTComponent *parent) : PollingComponent(1000), UARTDevice(parent) {}
+  RG9Component(UARTComponent *parent) : PollingComponent(1000), UARTDevice(parent)
+    {
+       bzero(samples, sizeof(samples));
+       nextSample = 0;
+       lastFallPerMin = 600;
+    }
 
   uint8_t     line[64];
   int         lastPoll;
   uint16_t    pollCount;
   uint16_t    failCount;
-    
+  
+  Sensor  *rainIntensity  = new Sensor();
+  Sensor  *rainFallPerMin = new Sensor();
+  uint8_t  samples[60];
+  uint8_t  nextSample;
+  unsigned lastFallPerMin;
+  
+  
   bool readLine()
     {
       bzero(line, sizeof(line));
@@ -80,7 +92,7 @@ class RG9Component : public PollingComponent, public UARTDevice, public Sensor, 
       write_str("R\n");
       flush();
 
-      // Response: "R [0-9]\n"
+      // Response: "R [0123456789]\n"
       if (readLine()) {
         int state = parseLine();
         if (state >= 0) {
@@ -99,8 +111,20 @@ class RG9Component : public PollingComponent, public UARTDevice, public Sensor, 
   void polledState(int state)
     {
       failCount = 0;
+      
+      samples[nextSample] = state;
+      if (++nextSample >= 60) nextSample = 0;
+      if (nextSample % 10 == 0) {
+        uint8_t prevMin = 0;
+        for (unsigned i = 0; i < 60; i++) {
+          prevMin += samples[i];
+        }
+        if (prevMin != lastFallPerMin) rainFallPerMin->publish_state(prevMin);
+        lastFallPerMin = prevMin;
+      }
+      
       if (lastPoll == state) return;
-      publish_state(state);
+      rainIntensity->publish_state(state);
       lastPoll = state;
     }
 };

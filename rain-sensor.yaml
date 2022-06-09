@@ -30,18 +30,25 @@ uart:
   tx_pin: GPIO1
   rx_pin: GPIO3
   baud_rate: 9600
+#  debug:
+#    direction: BOTH
+#    after:
+#      delimiter: "\n"
 
-text_sensor:
+sensor:
   - platform: custom
     lambda: |-
       auto rg9Sensor = new RG9Component(id(uart_bus));
       App.register_component(rg9Sensor);
-      return {rg9Sensor};
+      return {rg9Sensor->rainIntensity, rg9Sensor->rainFallPerMin};
     sensors:
-      name: "Rain Intensity"
-      accuracy_decimals: 0
-      unit_of_measurement: '-'
- 
+      - name: "Rain Intensity"
+        accuracy_decimals: 0
+        unit_of_measurement: '-'
+      - name: "Rain Fall"
+        accuracy_decimals: 0
+        unit_of_measurement: '-/min'
+
 script:
   - id: oneBeat
     then:
@@ -65,3 +72,4 @@ script:
         then:
         - script.execute: oneBeat
         - delay: 10s
+    
